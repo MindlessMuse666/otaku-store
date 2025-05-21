@@ -12,16 +12,14 @@ class ProductListView(ListView):
         queryset = Product.objects.filter(available=True)
         category_slug = self.kwargs.get('category_slug')
         if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            queryset = queryset.filter(category=category)
+            self.category = get_object_or_404(Category, slug=category_slug)
+            queryset = queryset.filter(category=self.category)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
-        category_slug = self.kwargs.get('category_slug')
-        if category_slug:
-            context['current_category'] = get_object_or_404(Category, slug=category_slug)
+        context['selected_category'] = getattr(self, 'category', None)
         return context
 
 class ProductDetailView(DetailView):

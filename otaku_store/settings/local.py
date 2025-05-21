@@ -1,4 +1,6 @@
 from .base import *
+import dj_database_url
+import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -7,10 +9,10 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+    )
 }
 
 # Email backend for development

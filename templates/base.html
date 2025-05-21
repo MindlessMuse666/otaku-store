@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Otaku Store{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Дополнительные стили -->
+    {% block extra_css %}{% endblock %}
+    
+    <!-- CSRF Token -->
+    {% csrf_token %}
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Логотип -->
+                <a href="{% url 'core:home' %}" class="text-2xl font-bold text-indigo-600">
+                    Otaku Store
+                </a>
+
+                <!-- Навигация -->
+                <div class="flex items-center space-x-6">
+                    <a href="{% url 'products:product_list' %}" 
+                       class="text-gray-600 hover:text-indigo-600">
+                        Товары
+                    </a>
+                    
+                    <!-- Корзина -->
+                    <a href="{% url 'cart:cart_detail' %}" 
+                       class="relative text-gray-600 hover:text-indigo-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        {% if user.is_authenticated and user.cart.total_items > 0 %}
+                            <span class="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                {{ user.cart.total_items }}
+                            </span>
+                        {% endif %}
+                    </a>
+
+                    <!-- Профиль -->
+                    {% if user.is_authenticated %}
+                        <div class="relative group">
+                            <button class="flex items-center text-gray-600 hover:text-indigo-600">
+                                <span class="mr-2">{{ user.email }}</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+                                <a href="{% url 'users:account_logout' %}" 
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Выйти
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'users:account_login' %}" 
+                           class="text-gray-600 hover:text-indigo-600">
+                            Войти
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Сообщения -->
+    {% if messages %}
+        <div class="container mx-auto px-4 mt-4">
+            {% for message in messages %}
+                <div class="p-4 mb-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Основной контент -->
+    <main class="flex-grow px-2 md:px-6 lg:px-16">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white shadow-sm mt-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center text-gray-600">
+                <p>&copy; {% now "Y" %} Otaku Store. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Дополнительные скрипты -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

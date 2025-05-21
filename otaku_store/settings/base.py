@@ -16,7 +16,7 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',  # Required for allauth
+    'django.contrib.sites',
 ]
 
 THIRD_PARTY_APPS = [
@@ -34,7 +34,6 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'apps.core.apps.CoreConfig',
     'apps.products.apps.ProductsConfig',
-    'apps.orders.apps.OrdersConfig',
     'apps.cart.apps.CartConfig',
     'apps.users.apps.UsersConfig',
 ]
